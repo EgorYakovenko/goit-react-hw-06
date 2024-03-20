@@ -1,13 +1,21 @@
 import Contact from '../Contact/Contact';
 import css from './ContactList.module.css';
-import { nanoid } from 'nanoid';
 
-function ContactList({ contacts, searchContakt, removeContact }) {
+import { selectContacts } from '../../redux/contactsSlice';
+import { useSelector } from 'react-redux';
+import { selectNameFilter } from '../../redux/filtersSlice';
+
+function ContactList() {
+  const selectedContacts = useSelector(selectContacts);
+  const filter = useSelector(selectNameFilter);
+  const contacts = selectedContacts.filter(contact => {
+    return contact.name.toLowerCase().includes(filter.toLowerCase());
+  });
   return (
     <ul className={css.container}>
-      {searchContakt.map(contact => (
+      {contacts.map(contact => (
         <li key={contact.id}>
-          <Contact data={contact} removeContact={removeContact} />
+          <Contact data={contact} />
         </li>
       ))}
     </ul>
@@ -15,19 +23,3 @@ function ContactList({ contacts, searchContakt, removeContact }) {
 }
 
 export default ContactList;
-
-{
-  /* <Contact />; */
-}
-
-// export const FriendList = ({ friends }) => {
-//   return (
-//     <ul className={css.container}>
-//       {friends.map(friend => (
-//         <li className={css.friendItem} key={friend.id}>
-//           <FriendListItem data={friend} />
-//         </li>
-//       ))}
-//     </ul>
-//   );
-// };
